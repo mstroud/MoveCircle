@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : mWindow(sf::VideoMode(640, 480), "SFML Application Chapter 1"), mPlayer(), mIsMovingUp(false), mIsMovingDown(false), mIsMovingLeft(false), mIsMovingRight(false)
+Game::Game() : mWindow(sf::VideoMode(640, 480), "SFML Application"), mPlayer(), mIsMovingUp(false), mIsMovingDown(false), mIsMovingLeft(false), mIsMovingRight(false)
 {
 	mPlayer.setRadius(40.f);
 	mPlayer.setPosition(100.f, 100.f);
