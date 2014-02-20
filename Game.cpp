@@ -1,20 +1,18 @@
 #include "Game.hpp"
 
-Game::Game() : mWindow(sf::VideoMode(640, 480), "SFML Application"), mCurrentPlayer(), mIsMovingUp(false), mIsMovingDown(false), mIsMovingLeft(false), mIsMovingRight(false)
+Game::Game() : mWindow(sf::VideoMode(640, 480), "SFML Application"), mIsMovingUp(false), mIsMovingDown(false), mIsMovingLeft(false), mIsMovingRight(false)
 {
 	mPlayers.push_back(Player("Jeb Kerman",sf::Vector2f(500.f,500.f))); // Add a default player
+	mPlayers.at(0).setRadius(40.f);
+	mPlayers.at(0).setPosition(100.f, 100.f);
+	mPlayers.at(0).setFillColor(sf::Color::Red);
+
 	mPlayers.push_back(Player("Bill Kerman")); // Add another player
-	m_playerSelected = mPlayers.begin();
-	m_playerSelected->setRadius(40.f);
-	m_playerSelected->setPosition(100.f, 100.f);
-	m_playerSelected->setFillColor(sf::Color::Red);
+	mPlayers.at(1).setRadius(20.f);
+	mPlayers.at(1).setPosition(200.f, 200.f);
+	mPlayers.at(1).setFillColor(sf::Color::Blue);
 
-	m_playerSelected++;
-	m_playerSelected->setRadius(20.f);
-	m_playerSelected->setPosition(200.f,200.f);
-	m_playerSelected->setFillColor(sf::Color::Blue);
-
-	m_playerSelected = mPlayers.begin();
+	m_playerSelected = mPlayers.begin(); // Set default player handle
 
 	timePerFrame = sf::seconds(1.f / 60.f);
 }
@@ -38,9 +36,8 @@ void Game::run()
 
 void Game::showPlayers() {
 	std::cout << "Player list:" << std::endl ;
-	for (std::vector<Player>::iterator it = mPlayers.begin(); it != mPlayers.end(); ++it) {
+	for (std::vector<Player>::iterator it = mPlayers.begin(); it != mPlayers.end(); ++it) 
 		std::cout << it->toString() << std::endl;
-	}
 }
 
 void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
@@ -67,7 +64,7 @@ void Game::processEvents()
 		switch (event.type)
 		{
 		case sf::Event::KeyPressed:
-		  if (event.key.code == sf::Keyboard::Tab)
+			if (event.key.code == sf::Keyboard::Tab)
 			{
 				if (++m_playerSelected == mPlayers.end())
 					m_playerSelected = mPlayers.begin();
@@ -107,8 +104,7 @@ void Game::update(sf::Time deltaTime)
 void Game::render()
 {
 	mWindow.clear();
-	for (std::vector<Player>::iterator it = mPlayers.begin(); it != mPlayers.end(); ++it) {
+	for (std::vector<Player>::iterator it = mPlayers.begin(); it != mPlayers.end(); ++it) 
 		mWindow.draw(*it);
-	}
 	mWindow.display();
 }

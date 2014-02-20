@@ -19,7 +19,6 @@ private:
 	sf::Time timePerFrame;
 	sf::RenderWindow mWindow;
 	std::vector<Player> mPlayers;
-	Player *mCurrentPlayer;
 	std::vector<Player>::iterator m_playerSelected ;
 	
 	bool mIsMovingUp, mIsMovingDown, mIsMovingLeft, mIsMovingRight;
