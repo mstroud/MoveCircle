@@ -1,11 +1,21 @@
-#include "Game.h"
+#include "Game.hpp"
 
-Game::Game() : mWindow(sf::VideoMode(640, 480), "SFML Application"), mPlayer(), mIsMovingUp(false), mIsMovingDown(false), mIsMovingLeft(false), mIsMovingRight(false)
+Game::Game() : mWindow(sf::VideoMode(640, 480), "SFML Application"), mCurrentPlayer(), mIsMovingUp(false), mIsMovingDown(false), mIsMovingLeft(false), mIsMovingRight(false)
 {
-	mPlayer.setRadius(40.f);
-	mPlayer.setPosition(100.f, 100.f);
-	mPlayer.setFillColor(sf::Color::Red);
-	playerSpeed = 500;
+	mPlayers.push_back(Player("Jeb Kerman",sf::Vector2f(500.f,500.f))); // Add a default player
+	mPlayers.push_back(Player("Bill Kerman")); // Add another player
+	m_playerSelected = mPlayers.begin();
+	m_playerSelected->setRadius(40.f);
+	m_playerSelected->setPosition(100.f, 100.f);
+	m_playerSelected->setFillColor(sf::Color::Red);
+
+	m_playerSelected++;
+	m_playerSelected->setRadius(20.f);
+	m_playerSelected->setPosition(200.f,200.f);
+	m_playerSelected->setFillColor(sf::Color::Blue);
+
+	m_playerSelected = mPlayers.begin();
+
 	timePerFrame = sf::seconds(1.f / 60.f);
 }
 
@@ -22,8 +32,14 @@ void Game::run()
 			processEvents();
 			update(timePerFrame);
 		}
-
 		render();
+	}
+}
+
+void Game::showPlayers() {
+	std::cout << "Player list:" << std::endl ;
+	for (std::vector<Player>::iterator it = mPlayers.begin(); it != mPlayers.end(); ++it) {
+		std::cout << it->toString() << std::endl;
 	}
 }
 
@@ -37,6 +53,7 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 		mIsMovingDown = isPressed;
 	if (key == sf::Keyboard::D)
 		mIsMovingRight = isPressed;
+	
 }
 
 void Game::processEvents()
@@ -50,7 +67,17 @@ void Game::processEvents()
 		switch (event.type)
 		{
 		case sf::Event::KeyPressed:
-			handlePlayerInput(event.key.code, true);
+		  if (event.key.code == sf::Keyboard::Tab)
+			{
+				if (++m_playerSelected == mPlayers.end())
+					m_playerSelected = mPlayers.begin();
+
+				std::cout << "Selected Player: " << m_playerSelected->toString() << std::endl;
+			} 
+			else 
+			{
+				handlePlayerInput(event.key.code, true);
+			}
 			break;
 		case sf::Event::KeyReleased:
 			handlePlayerInput(event.key.code, false);
@@ -63,22 +90,25 @@ void Game::processEvents()
 void Game::update(sf::Time deltaTime)
 {
 	sf::Vector2f movement(0.f, 0.f);
+	sf::Vector2f playerSpeed = m_playerSelected->getSpeed();
 
 	if (mIsMovingUp)
-		movement.y -= playerSpeed;
+		movement.y -= playerSpeed.y;
 	if (mIsMovingDown)
-		movement.y += playerSpeed;
+		movement.y += playerSpeed.y;
 	if (mIsMovingLeft)
-		movement.x -= playerSpeed;
+		movement.x -= playerSpeed.x;
 	if (mIsMovingRight)
-		movement.x += playerSpeed;
+		movement.x += playerSpeed.x;
 
-	mPlayer.move(movement * deltaTime.asSeconds());
+	m_playerSelected->move(movement * deltaTime.asSeconds());
 }
 
 void Game::render()
 {
 	mWindow.clear();
-	mWindow.draw(mPlayer);
+	for (std::vector<Player>::iterator it = mPlayers.begin(); it != mPlayers.end(); ++it) {
+		mWindow.draw(*it);
+	}
 	mWindow.display();
 }

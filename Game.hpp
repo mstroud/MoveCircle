@@ -1,10 +1,14 @@
+#include <iostream>
+#include <vector>
 #include <SFML/Graphics.hpp>
+#include "Player.hpp"
 
 class Game
 {
 public:
 	Game();
 	void run();
+	void showPlayers();
 
 private:
 	void processEvents();
@@ -12,9 +16,11 @@ private:
 	void render();
 	void handlePlayerInput(sf::Keyboard::Key, bool);
 
-	float playerSpeed;
 	sf::Time timePerFrame;
 	sf::RenderWindow mWindow;
-	sf::CircleShape mPlayer;
+	std::vector<Player> mPlayers;
+	Player *mCurrentPlayer;
+	std::vector<Player>::iterator m_playerSelected ;
+	
 	bool mIsMovingUp, mIsMovingDown, mIsMovingLeft, mIsMovingRight;
 };
